@@ -5,6 +5,7 @@ var app = express();
 // Hi Ayoub
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+// Hi Ahmed
 console.log('hiiiiiiiii');
 var routes = require("./routes/routes.js")(app);
  
