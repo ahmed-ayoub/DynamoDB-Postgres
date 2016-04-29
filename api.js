@@ -5,7 +5,7 @@ var app = express();
 // Hi Ayoub
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
- 
+console.log('hiiiiiiiii');
 var routes = require("./routes/routes.js")(app);
  
 var server = app.listen(3000, function () {
