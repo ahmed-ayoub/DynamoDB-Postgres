@@ -4,7 +4,7 @@ app.get("/", function(req, res) {
 
 
         var pg = require('pg');
-        var connectionString = 'pg://postgres:ayoub@localhost:5432/myfirstdb';
+        var connectionString = 'pg://postgres:postgres@localhost:5432/mydb';
 
         var client = new pg.Client(connectionString);
         client.connect();
