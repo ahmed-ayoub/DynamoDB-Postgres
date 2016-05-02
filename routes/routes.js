@@ -1,10 +1,14 @@
 var appRouter = function(app) {
 
+app.get("/ping" , function(req, res){
+ return res.status(200).json({ success: true});
+});
+
 app.get("/", function(req, res) {
 
 
         var pg = require('pg');
-        var connectionString = 'pg://postgres:postgres@localhost:5432/mydb';
+        var connectionString = 'pg://postgres:postgres@10.0.2.130:5432/mydb';
 
         var client = new pg.Client(connectionString);
         client.connect();
@@ -48,7 +52,7 @@ app.get("/", function(req, res) {
 app.post("/emp", function(req, res) {
 
         var pg = require('pg');
-        var connectionString = 'pg://postgres:ayoub@localhost:5432/myfirstdb';
+        var connectionString = 'pg://postgres:postgres@10.0.2.130:5432/mydb';
 
         var client = new pg.Client(connectionString);
         client.connect();
@@ -56,7 +60,7 @@ app.post("/emp", function(req, res) {
         var results = [];
  // Grab data from http request
     var data = {id: req.body.id, fname: req.body.fname, lname: req.body.lname,age: req.body.age};
-
+console.log(data);
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
         // Handle connection errors
