@@ -1,90 +1,109 @@
 var appRouter = function(app) {
 
+//////////////////////// PING ////////////////////////////////////////
 app.get("/ping" , function(req, res){
  return res.status(200).json({ success: true});
 });
 
-app.post("/add" , function(req, res){
-    var AWS = require("aws-sdk");
+//////////////////////// NoSql item Count ////////////////////////////////////
+app.get("/count" , function(req, res){
+ var AWS = require("aws-sdk");
     AWS.config.update({
   region: 'us-east-1'
 });
 
 var docClient = new AWS.DynamoDB.DocumentClient();
 
-var table = "DevOpsTest";
-var params = {
-    TableName:table,
-    Item:{
-        "_id" : 400 ,
-        "fname": 'ayman',
-        "lname": 'ayoub'
-    }
+var paramsCount = {
+  TableName: 'DevOpsTest', /* required */
+  Select: 'COUNT',
 };
-
-console.log("Adding a new item...");
-docClient.put(params, function(err, data) {
-    if (err) {
-        console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
-    } else {
-        console.log("Added item:", JSON.stringify(data, null, 2));
-        console.log("Added item:", data);
-    }
+docClient.scan(paramsCount, function(err, data) {
+  if (err){ console.log(err, err.stack); // an error occurred
+      return res.status(500).json({ success: false, data: err});
+  }
+  else  {   
+      console.log(data);           // successful response
+      return res.json(data);
+  }
 });
 
 });
 
-app.get("/", function(req, res) {
+////////////////////////////// Transfer data from Postgres to NoSQL ///////////////////////
+app.get("/transfer", function(req, res) {
 
+    var pg = require('pg');
+    var connectionString = 'pg://postgres:postgres@10.0.2.130:5432/mydb';
 
-        var pg = require('pg');
-        var connectionString = 'pg://postgres:postgres@10.0.2.130:5432/mydb';
+    var client = new pg.Client(connectionString);
+    client.connect();
 
-        var client = new pg.Client(connectionString);
-        client.connect();
-
-        var results = [];
+    var results = [];
 
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
-        // Handle connection errors
-        if(err) {
-          done();
-          console.log(err);
-          return res.status(500).json({ success: false, data: err});
-        }
+    // Handle connection errors
+    
+    if(err) {
+        done();
+        console.log(err);
+        return res.status(500).json({ success: false, data: err});
+    }
 
-        // SQL Query > Select Data
-        var query = client.query("SELECT * FROM emp;");
+    // SQL Query > Select Data
+    var query = client.query("SELECT * FROM emp;");
 
-        // Stream results back one row at a time
-        query.on('row', function(row) {
-            results.push(row);
+    var AWS = require("aws-sdk");
+    AWS.config.update({
+        region: 'us-east-1'
+    });
+    
+    var docClient = new AWS.DynamoDB.DocumentClient();
+
+    var table = "DevOpsTest";
+    
+    // Stream results back one row at a time
+    query.on('row', function(row) {
+        results.push(row);
+        var params = {
+        TableName:table,
+        Item:{
+            "_id" : row._id ,
+            "_fname": row._fname,
+            "_lname": row._lname,
+            "_age"  : row._age
+            }
+        };
+        docClient.put(params, function(err, data) {
+            if (err) {
+                console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+            } else {
+                console.log("Added item:", JSON.stringify(data, null, 2));
+            }
         });
-         // After all data is returned, close connection and return results
-        query.on('end', function() {
-            done();
-            return res.json(results);
-        });
-
+    });
+        // After all data is returned, close connection and return results
+    query.on('end', function() {
+        done();
+        return res.json(results);
     });
 
-        ////////////////////////////////////////////////////// end my code
+    });
+});
 
-        });
+app.post("/test", function(req, res) {
 
-app.post("/emp", function(req, res) {
+    var pg = require('pg');
+    var connectionString = 'pg://postgres:postgres@10.0.2.130:5432/mydb';
 
-        var pg = require('pg');
-        var connectionString = 'pg://postgres:postgres@10.0.2.130:5432/mydb';
+    var client = new pg.Client(connectionString);
+    client.connect();
 
-        var client = new pg.Client(connectionString);
-        client.connect();
-
-        var results = [];
- // Grab data from http request
+    var results = [];
+    // Grab data from http request
     var data = {id: req.body.id, fname: req.body.fname, lname: req.body.lname,age: req.body.age};
-console.log(data);
+    console.log(data);
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
         // Handle connection errors
@@ -95,10 +114,10 @@ console.log(data);
         }
 
         // SQL Query > Insert Data
-        client.query("INSERT INTO emp(_id,_fname,_lname,_age) values($1, $2, $3, $4)", [data.id, data.fname,data.lname, data.age]);
+    client.query("INSERT INTO emp(_id,_fname,_lname,_age) values($1, $2, $3, $4)", [data.id, data.fname,data.lname, data.age]);
 
         // SQL Query > Select Data
-        var query = client.query("SELECT * FROM emp");
+    var query = client.query("SELECT * FROM emp where _id = " + data.id );
 
         // Stream results back one row at a time
         query.on('row', function(row) {
@@ -110,8 +129,6 @@ console.log(data);
             done();
             return res.json(results);
         });
-
-
     });
 });
 }
