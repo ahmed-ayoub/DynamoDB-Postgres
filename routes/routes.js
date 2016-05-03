@@ -13,11 +13,6 @@ app.get("/", function(req, res) {
         var client = new pg.Client(connectionString);
         client.connect();
 
-        //var query = client.query("insert into emp(_id,_fname,_lname,_age) values (2,\'Mohamed\',\'Ayoub\', 38)");
-        //query.on('end', function() { client.end(); });
-        //console.log("hi ayoub");
-    //res.send("Hello World");
-
         ///////////////////////////////////////////////////// Start My Code
         var results = [];
 
