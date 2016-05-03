@@ -16,7 +16,7 @@ var table = "DevOpsTest";
 var params = {
     TableName:table,
     Item:{
-        "_id" : 300 ,
+        "_id" : 400 ,
         "fname": 'ayman',
         "lname": 'ayoub'
     }
