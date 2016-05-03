@@ -7,13 +7,6 @@ app.get("/ping" , function(req, res){
 app.post("/add" , function(req, res){
     var AWS = require("aws-sdk");
 
-AWS.config.update({
-  accessKeyId: 'AKIAJNVWEZV5IHANXZHQ',
-  secretAccessKey: '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',
-  region: 'us-east-1'
-});
-
-
 var docClient = new AWS.DynamoDB.DocumentClient();
 
 var table = "DevOpsTest";
