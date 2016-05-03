@@ -6,6 +6,9 @@ app.get("/ping" , function(req, res){
 
 app.post("/add" , function(req, res){
     var AWS = require("aws-sdk");
+    AWS.config.update({
+  region: 'us-east-1'
+});
 
 var docClient = new AWS.DynamoDB.DocumentClient();
 
