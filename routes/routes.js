@@ -4,6 +4,40 @@ app.get("/ping" , function(req, res){
  return res.status(200).json({ success: true});
 });
 
+app.post("/add" , function(req, res){
+    var AWS = require("aws-sdk");
+
+AWS.config.update({
+  accessKeyId: 'AKIAJNVWEZV5IHANXZHQ',
+  secretAccessKey: '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',
+  region: 'us-east-1'
+});
+
+
+var docClient = new AWS.DynamoDB.DocumentClient();
+
+var table = "DevOpsTest";
+var params = {
+    TableName:table,
+    Item:{
+        "_id" : 300 ,
+        "fname": 'ayman',
+        "lname": 'ayoub'
+    }
+};
+
+console.log("Adding a new item...");
+docClient.put(params, function(err, data) {
+    if (err) {
+        console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+        console.log("Added item:", JSON.stringify(data, null, 2));
+        console.log("Added item:", data);
+    }
+});
+
+});
+
 app.get("/", function(req, res) {
 
 
