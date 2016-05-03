@@ -13,7 +13,6 @@ app.get("/", function(req, res) {
         var client = new pg.Client(connectionString);
         client.connect();
 
-        ///////////////////////////////////////////////////// Start My Code
         var results = [];
 
     // Get a Postgres client from the connection pool
