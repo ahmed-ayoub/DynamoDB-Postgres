@@ -15,7 +15,7 @@ app.get("/count" , function(req, res){
 var docClient = new AWS.DynamoDB.DocumentClient();
 
 var paramsCount = {
-  TableName: 'DevOpsTest', /* required */
+  TableName: 'emp', /* required */
   Select: 'COUNT',
 };
 docClient.scan(paramsCount, function(err, data) {
@@ -34,7 +34,7 @@ docClient.scan(paramsCount, function(err, data) {
 app.get("/transfer", function(req, res) {
 
     var pg = require('pg');
-    var connectionString = 'pg://postgres:postgres@10.0.2.130:5432/mydb';
+    var connectionString = 'pg://postgres:postgres@10.0.3.231:5432/empdb';
 
     var client = new pg.Client(connectionString);
     client.connect();
@@ -61,7 +61,7 @@ app.get("/transfer", function(req, res) {
     
     var docClient = new AWS.DynamoDB.DocumentClient();
 
-    var table = "DevOpsTest";
+    var table = "emp";
     
     // Stream results back one row at a time
     query.on('row', function(row) {
@@ -95,7 +95,7 @@ app.get("/transfer", function(req, res) {
 app.post("/test", function(req, res) {
 
     var pg = require('pg');
-    var connectionString = 'pg://postgres:postgres@10.0.2.130:5432/mydb';
+    var connectionString = 'pg://postgres:postgres@10.0.3.231:5432/empdb';
 
     var client = new pg.Client(connectionString);
     client.connect();
