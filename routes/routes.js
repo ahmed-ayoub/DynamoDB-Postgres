@@ -92,6 +92,7 @@ app.get("/transfer", function(req, res) {
     });
 });
 
+/////////////////////////////////////////// add new emp ////////////////////////////////////////////////////
 app.post("/test", function(req, res) {
 
     var pg = require('pg');
@@ -132,7 +133,4 @@ app.post("/test", function(req, res) {
     });
 });
 }
-
 module.exports = appRouter;
-
-
