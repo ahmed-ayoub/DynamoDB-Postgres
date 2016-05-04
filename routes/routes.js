@@ -5,6 +5,11 @@ app.get("/ping" , function(req, res){
  return res.status(200).json({ success: true});
 });
 
+////////////////////////// Delete all resources /////////////////////////////
+app.delete("/teardown" , function(req, res){
+ return res.status(200).json({ success: true});
+});
+
 //////////////////////// NoSql item Count ////////////////////////////////////
 app.get("/count" , function(req, res){
  var AWS = require("aws-sdk");
@@ -132,5 +137,6 @@ app.post("/test", function(req, res) {
         });
     });
 });
+
 }
 module.exports = appRouter;
