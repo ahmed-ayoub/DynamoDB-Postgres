@@ -98,6 +98,7 @@ app.get("/transfer", function(req, res) {
 });
 
 /////////////////////////////////////////// add new emp ////////////////////////////////////////////////////
+var helpers = require('./lib.js');
 app.post("/test", function(req, res) {
 
     var pg = require('pg');
@@ -108,9 +109,12 @@ app.post("/test", function(req, res) {
 
     var results = [];
     // Grab data from http request
-    var data = {id: req.body.id, fname: req.body.fname, lname: req.body.lname,age: req.body.age};
-    console.log(data);
-    // Get a Postgres client from the connection pool
+    //var data = {id: req.body.id, fname: req.body.fname, lname: req.body.lname,age: req.body.age};
+    
+    // Generate a Random vaues and form a postgres recored
+    var data = {id: helpers.getRandomNum(10000000), fname: helpers.getRandomString(), lname: helpers.getRandomString(),age: helpers.getRandomNum(100)};
+    
+    //Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
         // Handle connection errors
         if(err) {
@@ -139,4 +143,5 @@ app.post("/test", function(req, res) {
 });
 
 }
+
 module.exports = appRouter;

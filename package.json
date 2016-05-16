@@ -1,7 +1,7 @@
 {
-    "name": "nodejs-api-sample",
+    "name": "DevOps Assessment",
     "version": "1.0.0",
-    "description": "An example of making a Node.js API server",
-    "author": "Nic Raboy",
+    "description": "To answer the DevOps assessment",
+    "author": "Ahmed Ayoub",
     "license": "MIT"
 }
